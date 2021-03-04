@@ -51,7 +51,10 @@ impl Headers {
         values: impl ToHeaderValues,
     ) -> Option<HeaderValues> {
         let name = name.into();
-        let values: HeaderValues = values.to_header_values().unwrap().collect();
+        let values: HeaderValues = match values.to_header_values() {
+            Ok(vals) => vals.collect(),
+            Err(_) => return None,
+        };
         self.headers.insert(name, values)
     }
 
